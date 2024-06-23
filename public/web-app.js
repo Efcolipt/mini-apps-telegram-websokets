@@ -6,7 +6,7 @@ const ws = new WebSocket("wss://echo.websocket.org/");
 ws.onopen = function (event) {
 	ws.send(JSON.stringify({
 		type: "message",
-		text: document.getElementById("text").value,
+		text: 'test',
 		id: 'test',
 		date: Date.now(),
 	}));
