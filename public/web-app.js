@@ -1,6 +1,22 @@
 const app = window.Telegram.WebApp;
 const storage = app.CloudStorage;
 
+const ws = new WebSocket("ws://195.35.8.129:9010");
+
+ws.onopen = function (event) {
+	ws.send(JSON.stringify({
+		type: "message",
+		text: document.getElementById("text").value,
+		id: 'test',
+		date: Date.now(),
+	}));
+};
+
+ws.onmessage = function (event) {
+	console.log(event.data);
+};
+
+
 app.ready();
 app.expand();
 
