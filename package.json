@@ -5,7 +5,8 @@
 	"description": "",
 	"main": "index.js",
 	"scripts": {
-		"serve": "nodemon bot.js"
+		"serve:bot": "nodemon bot.js",
+		"serve:web": "nodemon server.js"
 	},
 	"keywords": [],
 	"author": "",

@@ -4,22 +4,24 @@ const app = window.Telegram.WebApp;
 const conn = new WebSocket("ws://vn1840.vps-server.ru:5017");
 
 class CryptoManager {
+	#Crypto = цшт
+
     generateKeyPair() {
-        return Crypto.generateKeyPairSync("rsa", { modulusLength: 2048, })
+        return this.#Crypto.generateKeyPairSync("rsa", { modulusLength: 2048, })
     }
 
     encryptMessage(packageData, hashKey, serverCertificate) {
         const stringForHash = "type=echo&data.message=" + packageData.data.message;
 
-        const signature = Crypto.createHmac("sha256", hashKey).update(stringForHash).digest('hex').toUpperCase();
+        const signature = this.#Crypto.createHmac("sha256", hashKey).update(stringForHash).digest('hex').toUpperCase();
 
         packageData.signature = signature;
 
-        const aesKey = Crypto.randomBytes(32);
-        const aesIV = Crypto.randomBytes(16);
+        const aesKey = this.#Crypto.randomBytes(32);
+        const aesIV = this.#Crypto.randomBytes(16);
 
 
-        let cipher = Crypto.createCipheriv('aes-256-cbc', aesKey, aesIV);
+        let cipher = this.#Crypto.createCipheriv('aes-256-cbc', aesKey, aesIV);
 
         let encrypted = cipher.update(JSON.stringify(packageData), 'utf8', 'base64');
 
@@ -27,7 +29,7 @@ class CryptoManager {
 
         const result = Buffer.from(encrypted, 'base64');
 
-        const cipherSecret = Crypto.publicEncrypt(
+        const cipherSecret = this.#Crypto.publicEncrypt(
             {
                 key: serverCertificate,
                 padding: Crypto.constants.RSA_PKCS1_PADDING,
@@ -44,7 +46,7 @@ class CryptoManager {
         const cipheredSecret = bytes.slice(0, 256);
         const payload = bytes.slice(256, bytes.length);
 
-        const secret = Crypto.privateDecrypt(
+        const secret = this.#Crypto.privateDecrypt(
             {
                 key: privateKey,
                 padding: Crypto.constants.RSA_PKCS1_PADDING,
@@ -56,7 +58,7 @@ class CryptoManager {
         const aesKey = secret.slice(0, 32);
         const aesIV = secret.slice(32, 48);
 
-        const decipher = Crypto.createDecipheriv('aes-256-cbc', aesKey, aesIV);
+        const decipher = this.#Crypto.createDecipheriv('aes-256-cbc', aesKey, aesIV);
         const decrypted = decipher.update(payload, 'base64', 'utf8');
 
         return JSON.parse((decrypted + decipher.final('utf8')));
